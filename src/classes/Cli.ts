@@ -11,12 +11,12 @@ class Cli {
   // TODO: update the vehicles property to accept Truck and Motorbike objects as well
   // TODO: You will need to use the Union operator to define additional types for the array
   // TODO: See the AbleToTow interface for an example of how to use the Union operator
-  vehicles: (Car)[] = [] as (Car)[] | (Truck)[] | (Motorbike)[];
+  vehicles: (Car | Truck | Motorbike)[] = [];
   selectedVehicleVin: string | undefined;
   exit: boolean = false;
 
   // TODO: Update the constructor to accept Truck and Motorbike objects as well
-  constructor(vehicles: (Car)[] | (Truck)[] | (Motorbike)[]) {
+  constructor(vehicles: (Car | Truck | Motorbike)[]) {
     this.vehicles = vehicles;
   }
 
@@ -278,10 +278,10 @@ class Cli {
         // perform actions on the motorbike
         this.performActions();
       });
-  // TODO: Use the answers object to pass the required properties to the Motorbike constructor
-  // TODO: push the motorbike to the vehicles array
-  // TODO: set the selectedVehicleVin to the vin of the motorbike
-  // TODO: perform actions on the motorbike
+    // TODO: Use the answers object to pass the required properties to the Motorbike constructor
+    // TODO: push the motorbike to the vehicles array
+    // TODO: set the selectedVehicleVin to the vin of the motorbike
+    // TODO: perform actions on the motorbike
   };
 
 
@@ -320,119 +320,100 @@ class Cli {
   }
 
   // method to perform actions on a vehicle
-  performActions(): void {
-    inquirer
-      .prompt([
-        {
-          type: 'list',
-          name: 'action',
-          message: 'Select an action',
-          // TODO: add options to tow and wheelie
-          choices: [
-            'Print details',
-            'Start vehicle',
-            'Accelerate 5 MPH',
-            'Decelerate 5 MPH',
-            'Stop vehicle',
-            'Turn right',
-            'Turn left',
-            'Reverse',
-            'Select or create another vehicle',
-            'Exit',
-            'Tow',
-            'Wheelie',
-          ],
-        },
-      ])
-      .then((answers) => {
-        // perform the selected action
-        if (answers.action === 'Print details') {
-          // find the selected vehicle and print its details
-          for (let i = 0; i < this.vehicles.length; i++) {
-            if (this.vehicles[i].vin === this.selectedVehicleVin) {
-              this.vehicles[i].printDetails();
-            }
-          }
-        } else if (answers.action === 'Start vehicle') {
-          // find the selected vehicle and start it
-          for (let i = 0; i < this.vehicles.length; i++) {
-            if (this.vehicles[i].vin === this.selectedVehicleVin) {
-              this.vehicles[i].start();
-            }
-          }
-        } else if (answers.action === 'Accelerate 5 MPH') {
-          // find the selected vehicle and accelerate it by 5 MPH
-          for (let i = 0; i < this.vehicles.length; i++) {
-            if (this.vehicles[i].vin === this.selectedVehicleVin) {
-              this.vehicles[i].accelerate(5);
-            }
-          }
-        } else if (answers.action === 'Decelerate 5 MPH') {
-          // find the selected vehicle and decelerate it by 5 MPH
-          for (let i = 0; i < this.vehicles.length; i++) {
-            if (this.vehicles[i].vin === this.selectedVehicleVin) {
-              this.vehicles[i].decelerate(5);
-            }
-          }
-        } else if (answers.action === 'Stop vehicle') {
-          // find the selected vehicle and stop it
-          for (let i = 0; i < this.vehicles.length; i++) {
-            if (this.vehicles[i].vin === this.selectedVehicleVin) {
-              this.vehicles[i].stop();
-            }
-          }
-        } else if (answers.action === 'Turn right') {
-          // find the selected vehicle and turn it right
-          for (let i = 0; i < this.vehicles.length; i++) {
-            if (this.vehicles[i].vin === this.selectedVehicleVin) {
-              this.vehicles[i].turn('right');
-            }
-          }
-        } else if (answers.action === 'Turn left') {
-          // find the selected vehicle and turn it left
-          for (let i = 0; i < this.vehicles.length; i++) {
-            if (this.vehicles[i].vin === this.selectedVehicleVin) {
-              this.vehicles[i].turn('left');
-            }
-          }
-        } else if (answers.action === 'Reverse') {
-          // find the selected vehicle and reverse it
-          for (let i = 0; i < this.vehicles.length; i++) {
-            if (this.vehicles[i].vin === this.selectedVehicleVin) {
-              this.vehicles[i].reverse();
-            }
-          }
-        } else if (answers.action === 'Tow' && this.vehicles[0] instanceof Truck) {
-          // find the selected vehicle and tow another vehicle
-          for (let i = 0; i < this.vehicles.length; i++) {
-            if (this.vehicles[i].vin === this.selectedVehicleVin) {
-              this.findVehicleToTow(this.vehicles[i] as Truck);   
-            }
-          }
-        } else if (answers.action === 'Wheelie' && this.vehicles[0] instanceof Motorbike) {
-          // find the selected vehicle and perform a wheelie
-          for (let i = 0; i < this.vehicles.length; i++) {
-            if (this.vehicles[i].vin === this.selectedVehicleVin) {
-              (this.vehicles[i] as Motorbike).wheelie();
-            }
-          }
-        }
-        // TODO: add statements to perform the tow action only if the selected vehicle is a truck. Call the findVehicleToTow method to find a vehicle to tow and pass the selected truck as an argument. After calling the findVehicleToTow method, you will need to return to avoid instantly calling the performActions method again since findVehicleToTow is asynchronous.
-        // TODO: add statements to perform the wheelie action only if the selected vehicle is a motorbike
-        else if (answers.action === 'Select or create another vehicle') {
-          // start the cli to return to the initial prompt if the user wants to select or create another vehicle
+// method to perform actions on a vehicle
+performActions(): void {
+  inquirer
+    .prompt([
+      {
+        type: 'list',
+        name: 'action',
+        message: 'Select an action',
+        choices: [
+          'Print details',
+          'Start vehicle',
+          'Accelerate 5 MPH',
+          'Decelerate 5 MPH',
+          'Stop vehicle',
+          'Turn right',
+          'Turn left',
+          'Reverse',
+          'Select or create another vehicle',
+          'Exit',
+          'Tow',
+          'Wheelie',
+        ],
+      },
+    ])
+    .then((answers) => {
+      const selectedVehicle = this.vehicles.find(vehicle => vehicle.vin === this.selectedVehicleVin);
+
+      // Perform the selected action
+      switch (answers.action) {
+        case 'Print details':
+          selectedVehicle?.printDetails();
+          break;
+        case 'Start vehicle':
+          selectedVehicle?.start();
+          break;
+        case 'Accelerate 5 MPH':
+          selectedVehicle?.accelerate(5);
+          break;
+        case 'Decelerate 5 MPH':
+          selectedVehicle?.decelerate(5);
+          break;
+        case 'Stop vehicle':
+          selectedVehicle?.stop();
+          break;
+        case 'Turn right':
+          selectedVehicle?.turn('right');
+          break;
+        case 'Turn left':
+          selectedVehicle?.turn('left');
+          break;
+        case 'Reverse':
+          selectedVehicle?.reverse();
+          break;
+        case 'Tow':
+          this.handleTowAction();
+          return; // Prevent further actions until tow action is complete
+        case 'Wheelie':
+          this.handleWheelieAction();
+          return; // Prevent further actions until wheelie action is complete
+        case 'Exit':
+          this.exit = true;
+          return;
+        case 'Select or create another vehicle':
           this.startCli();
           return;
-        } else {
-          // exit the cli if the user selects exit
-          this.exit = true;
-        }
-        if (!this.exit) {
-          // if the user does not want to exit, perform actions on the selected vehicle
-          this.performActions();
-        }
-      });
+      }
+
+      // Prompt again for actions after completing the selected one
+      this.performActions();
+    });
+}
+
+// Function to handle Tow action
+handleTowAction(): void {
+  const selectedVehicle = this.vehicles.find(vehicle => vehicle.vin === this.selectedVehicleVin);
+  if (selectedVehicle instanceof Truck) {
+    this.findVehicleToTow(selectedVehicle); // Call existing function to find a vehicle to tow
+  } else {
+    this.performActions(); // Return to actions
   }
+}
+
+// Function to handle Wheelie action
+handleWheelieAction(): void {
+  const selectedVehicle = this.vehicles.find(vehicle => vehicle.vin === this.selectedVehicleVin);
+  if (selectedVehicle instanceof Motorbike) {
+    selectedVehicle.wheelie(); // Call the wheelie method
+  } else {
+    this.performActions(); // Return to actions
+  }
+
+}
+
+
 
   // method to start the cli
   startCli(): void {
