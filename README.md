@@ -35,6 +35,9 @@ npm install
 
 ## Usage
 Usage
+Video:
+https://drive.google.com/file/d/1SKU8IN2CR3gqbJMbcHiGji7u4KAwBL1I/view
+
 Creating Vehicles
 You can create different types of vehicles by choosing the appropriate options from the command line.
 
