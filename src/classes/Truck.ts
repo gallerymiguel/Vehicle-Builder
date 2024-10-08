@@ -34,7 +34,7 @@ class Truck extends Vehicle implements AbleToTow {
         weight: number,
         topSpeed: number,
         wheels: Wheel[],
-        towCapacity: number
+        towingCapacity: number
     ) {
         super();
         this.vin = vin;
@@ -44,7 +44,7 @@ class Truck extends Vehicle implements AbleToTow {
         this.year = year;
         this.weight = weight;
         this.topSpeed = topSpeed;
-        this.towingCapacity = towCapacity;
+        this.towingCapacity = towingCapacity;
 
         if (wheels.length !== 4) {
             this.wheels = [new Wheel(), new Wheel(), new Wheel(), new Wheel()];
@@ -52,17 +52,26 @@ class Truck extends Vehicle implements AbleToTow {
             this.wheels = wheels;
         }
     }
-
+    wheelie(): void {
+      if (this.wheels.length === 2) {
+      console.log(`Motorbike ${this.make} ${this.model} is doing a wheelie!`);
+      } else {
+        console.log('Trucks does not have 2 wheels');
+      }
+    }
   // TODO: Implement the tow method from the AbleToTow interface
   tow(vehicle: Truck | Motorbike | Car): void {
     if ('make' in vehicle && 'model' in vehicle && 'weight' in vehicle) {
       const vehicleWeight = vehicle.weight;
+
+  console.log(`Attempting to tow ${vehicle.make} ${vehicle.model}`);
 
       if (vehicleWeight <= this.towingCapacity) {
         console.log(`Vehicle is being towed`);
       } else {
         console.log(`Vehicle is too heavy to be towed`);
       }
+      
       // TODO: Get the make an model of the vehicle if it exists
       // TODO: Check if the vehicle's weight is less than or equal to the truck's towing capacity
       // TODO: If it is, log that the vehicle is being towed
